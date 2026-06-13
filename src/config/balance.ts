@@ -43,6 +43,7 @@ export const Balance = {
     pixelsPerMeter: 90, // distance → metres conversion
     ceilingDeath: true, // touching top/bottom kills
     edgeGrace: 14, // px of forgiveness at the very edges
+    startGraceMs: 550, // invulnerable easing-in window at the start of a run
   },
 
   // ----------------------------------------------------------- obstacles ----
