@@ -9,6 +9,10 @@ dist-ssr
 .vite
 coverage
 
+# smoke test artifacts
+.smoke
+.smoke-preview.log
+
 # Capacitor / native (phase 6)
 ios/App/Pods
 ios/App/App/public

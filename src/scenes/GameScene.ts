@@ -142,6 +142,14 @@ export class GameScene extends Phaser.Scene {
         repeat: -1,
       });
     }
+    // soft accent halo so the (deliberately dark) raven always reads against
+    // the dark sky — and it looks suitably ghostly.
+    const backlight = this.add
+      .image(2, 0, Tex.glow)
+      .setScale(2.6)
+      .setAlpha(0.38)
+      .setTint(skin.accentColor)
+      .setBlendMode(Phaser.BlendModes.ADD);
     this.crowBody = this.add.sprite(0, 0, CROW_FRAMES[1]).setTint(skin.bodyColor);
     this.crowBody.play("flap");
     const eye = this.add
@@ -149,7 +157,8 @@ export class GameScene extends Phaser.Scene {
       .setScale(0.7)
       .setTint(skin.accentColor)
       .setBlendMode(Phaser.BlendModes.ADD);
-    this.crow = this.add.container(0, 0, [this.crowBody, eye]).setDepth(20);
+    this.crow = this.add.container(0, 0, [backlight, this.crowBody, eye]).setDepth(20);
+    this.tweens.add({ targets: backlight, alpha: 0.55, scale: 2.9, duration: 700, yoyo: true, repeat: -1, ease: "Sine.inOut" });
   }
 
   private buildParticles(): void {

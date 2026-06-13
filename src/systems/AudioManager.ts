@@ -49,6 +49,8 @@ const TIER_BPM = [82, 90, 99, 109, 120];
 export class AudioManager {
   private ready = false;
   private starting = false;
+  /** Last init error, exposed for diagnostics / smoke tests (null if healthy). */
+  lastError: string | null = null;
 
   private musicBus!: Tone.Gain;
   private sfxBus!: Tone.Gain;
@@ -97,8 +99,9 @@ export class AudioManager {
       await Tone.start();
       this.build();
       this.ready = true;
-    } catch {
+    } catch (e) {
       this.ready = false;
+      this.lastError = e instanceof Error ? e.message : String(e);
     } finally {
       this.starting = false;
     }

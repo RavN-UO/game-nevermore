@@ -45,6 +45,7 @@ export class MenuScene extends Phaser.Scene {
 
     // drifting raven with the active skin
     const skin = getSkin(this.svc.save.get().selectedSkin);
+    this.add.image(W / 2, H * 0.33, Tex.glow).setScale(5).setAlpha(0.3).setTint(skin.accentColor).setBlendMode(Phaser.BlendModes.ADD).setDepth(3);
     const crow = this.add.image(W / 2, H * 0.33, Tex.crow0).setScale(1.8).setTint(skin.bodyColor).setDepth(3);
     this.add.image(crow.x + 34, crow.y - 8, Tex.eye).setScale(0.8).setTint(skin.accentColor).setBlendMode(Phaser.BlendModes.ADD).setDepth(3);
     this.tweens.add({ targets: crow, y: crow.y - 16, angle: 5, duration: 2600, yoyo: true, repeat: -1, ease: "Sine.inOut" });

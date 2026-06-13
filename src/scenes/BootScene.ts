@@ -21,6 +21,7 @@ export class BootScene extends Phaser.Scene {
     this.add.image(width / 2, height / 2, Tex.vignette).setDisplaySize(width, height).setDepth(50);
 
     // A lone raven drifting on the title screen
+    this.add.image(width / 2, height * 0.34, Tex.glow).setScale(4.5).setAlpha(0.28).setTint(Palette.accent).setBlendMode(Phaser.BlendModes.ADD);
     const crow = this.add.image(width / 2, height * 0.34, Tex.crow0).setScale(1.6).setTint(Palette.crow);
     crow.setAngle(-6);
     this.tweens.add({ targets: crow, y: crow.y - 18, angle: 6, duration: 2600, yoyo: true, repeat: -1, ease: "Sine.inOut" });

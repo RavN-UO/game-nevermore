@@ -50,7 +50,12 @@ const config: Phaser.Types.Core.GameConfig = {
   ],
 };
 
-new Phaser.Game(config);
+const game = new Phaser.Game(config);
+
+// Expose for debugging / automated smoke tests (harmless in production).
+const dbg = globalThis as unknown as { __GAME__: Phaser.Game; __SERVICES__: Services };
+dbg.__GAME__ = game;
+dbg.__SERVICES__ = services;
 
 // Hide the HTML boot splash once the canvas is up.
 window.addEventListener("load", () => {
