@@ -101,14 +101,24 @@ function buildSky(scene: Phaser.Scene): void {
   mg.addColorStop(1, css(0x4a86c4, 0));
   ctx.fillStyle = mg;
   ctx.fillRect(0, 0, w, h);
-  ctx.fillStyle = css(0xd6ecff, 0.9);
-  ctx.beginPath();
-  ctx.arc(mx, my, 46, 0, Math.PI * 2);
-  ctx.fill();
-  ctx.fillStyle = hex(Palette.skyTop);
-  ctx.beginPath();
-  ctx.arc(mx + 22, my - 12, 44, 0, Math.PI * 2);
-  ctx.fill();
+
+  // crescent moon, built on an offscreen canvas so the "dark side" is carved
+  // with destination-out (a real crescent) instead of a flat dark disc that
+  // reads as a black ball over the glow.
+  const mr = 50;
+  const moon = document.createElement("canvas");
+  moon.width = moon.height = mr * 3;
+  const mc = moon.getContext("2d")!;
+  const c0 = mr * 1.5;
+  mc.fillStyle = "#d8ecff";
+  mc.beginPath();
+  mc.arc(c0, c0, mr, 0, Math.PI * 2);
+  mc.fill();
+  mc.globalCompositeOperation = "destination-out";
+  mc.beginPath();
+  mc.arc(c0 + mr * 0.5, c0 - mr * 0.28, mr * 0.92, 0, Math.PI * 2);
+  mc.fill();
+  ctx.drawImage(moon, mx - c0, my - c0);
 
   refresh(scene, Tex.sky);
 }
@@ -199,34 +209,44 @@ function buildCrow(scene: Phaser.Scene): void {
 }
 
 function buildCrowFrame(scene: Phaser.Scene, key: string, wing: "up" | "mid" | "down"): void {
-  const W = 112;
-  const H = 84;
+  const W = 124;
+  const H = 96;
   const g = scene.make.graphics({ x: 0, y: 0 }, false);
 
-  // body silhouette in white so the sprite can be tinted by the active skin
+  // Sleek raven in flight, facing right. Drawn in white so the sprite can be
+  // tinted by the active skin; the eye/halo are added as separate glows.
   g.fillStyle(0xffffff, 1);
   const body: Phaser.Types.Math.Vector2Like[] = [
-    { x: 8, y: 40 }, // tail tip
-    { x: 36, y: 30 },
-    { x: 70, y: 28 }, // back
-    { x: 92, y: 32 }, // head top
-    { x: 108, y: 40 }, // beak tip
-    { x: 92, y: 46 }, // beak under
-    { x: 72, y: 46 },
-    { x: 44, y: 54 }, // belly
-    { x: 18, y: 52 }, // tail bottom
-    { x: 22, y: 44 }, // tail notch
+    { x: 120, y: 44 }, // beak tip
+    { x: 104, y: 39 }, // beak top
+    { x: 96, y: 34 }, // forehead
+    { x: 86, y: 31 }, // crown
+    { x: 72, y: 33 }, // nape
+    { x: 50, y: 36 }, // back
+    { x: 22, y: 33 }, // upper tail base
+    { x: 4, y: 30 }, // upper tail tip
+    { x: 16, y: 46 }, // tail fork
+    { x: 6, y: 60 }, // lower tail tip
+    { x: 30, y: 52 }, // lower tail base
+    { x: 58, y: 54 }, // belly
+    { x: 84, y: 52 }, // breast
+    { x: 98, y: 48 }, // throat
+    { x: 104, y: 46 }, // chin
   ];
   g.fillPoints(body, true);
+  // smooth the head with a small circle
+  g.fillCircle(88, 38, 9);
 
-  // wing
-  const base1 = { x: 40, y: 34 };
-  const base2 = { x: 66, y: 32 };
-  let tip: Phaser.Types.Math.Vector2Like;
-  if (wing === "up") tip = { x: 52, y: 2 };
-  else if (wing === "mid") tip = { x: 60, y: 26 };
-  else tip = { x: 50, y: 64 };
-  g.fillPoints([base1, base2, tip], true);
+  // wing — a swept, slightly curved shape that changes per frame
+  let wingPts: Phaser.Types.Math.Vector2Like[];
+  if (wing === "up") {
+    wingPts = [{ x: 44, y: 36 }, { x: 74, y: 34 }, { x: 78, y: 12 }, { x: 60, y: 2 }, { x: 48, y: 22 }];
+  } else if (wing === "mid") {
+    wingPts = [{ x: 42, y: 38 }, { x: 72, y: 36 }, { x: 92, y: 30 }, { x: 70, y: 26 }, { x: 50, y: 30 }];
+  } else {
+    wingPts = [{ x: 46, y: 38 }, { x: 72, y: 40 }, { x: 80, y: 64 }, { x: 58, y: 74 }, { x: 48, y: 50 }];
+  }
+  g.fillPoints(wingPts, true);
 
   g.generateTexture(key, W, H);
   g.destroy();

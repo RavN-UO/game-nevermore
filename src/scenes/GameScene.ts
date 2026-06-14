@@ -615,7 +615,11 @@ export class GameScene extends Phaser.Scene {
     this.svc.haptics.fire("heavy");
     this.svc.audio.stopMusic(0.4);
 
-    this.tweens.add({ targets: this.crow, alpha: 0, angle: this.crow.angle + 80, y: this.crowY + 60, duration: 500, ease: "Quad.in" });
+    // knocked from the sky: a short upward kick, then tumble and fall away
+    this.tweens.add({ targets: this.crow, y: this.crowY - 40, duration: 180, ease: "Quad.out" });
+    this.tweens.add({ targets: this.crow, angle: this.crow.angle + 220, duration: 900, ease: "Linear" });
+    this.tweens.add({ targets: this.crow, y: DESIGN.height + 120, delay: 160, duration: 820, ease: "Quad.in" });
+    this.tweens.add({ targets: this.crow, alpha: 0, delay: 520, duration: 500 });
 
     eventBus().emit(GameEvent.Death, {});
 

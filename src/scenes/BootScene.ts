@@ -58,9 +58,7 @@ export class BootScene extends Phaser.Scene {
       const svc = getServices(this);
       void svc.audio.unlock().then(() => svc.audio.playMenu());
       this.cameras.main.fadeOut(280, 5, 5, 12);
-      this.cameras.main.once(Phaser.Cameras.Scene2D.Events.FADE_OUT_COMPLETE, () => {
-        this.scene.start("Menu");
-      });
+      this.time.delayedCall(300, () => this.scene.start("Menu"));
     };
     this.input.once("pointerdown", begin);
   }
