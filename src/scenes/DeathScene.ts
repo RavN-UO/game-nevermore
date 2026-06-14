@@ -120,12 +120,14 @@ export class DeathScene extends Phaser.Scene {
     iconButton(this, W - 80, navY, "🏆", () => this.goto("Leaderboard")).setDepth(5);
 
     // whole-screen restart (enabled after a short guard so the death tap
-    // doesn't instantly restart)
+    // doesn't instantly restart). Use a REAL-TIME timer (not the scene clock)
+    // so the guard is ~300 ms regardless of frame rate.
     const zone = this.add.zone(0, 0, W, H).setOrigin(0).setDepth(1).setInteractive();
-    zone.on("pointerdown", () => {
+    zone.on("pointerup", () => {
       if (this.canRestart) this.restart();
     });
-    this.time.delayedCall(420, () => (this.canRestart = true));
+    const guard = window.setTimeout(() => (this.canRestart = true), 300);
+    this.events.once(Phaser.Scenes.Events.SHUTDOWN, () => window.clearTimeout(guard));
 
     this.cameras.main.fadeIn(220, 5, 5, 12);
   }

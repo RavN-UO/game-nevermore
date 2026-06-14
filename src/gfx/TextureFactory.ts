@@ -128,9 +128,9 @@ function buildVignette(scene: Phaser.Scene): void {
   const h = DESIGN.height;
   const ctx = canvas(scene, Tex.vignette, w, h);
   if (!ctx) return;
-  const g = ctx.createRadialGradient(w / 2, h / 2, h * 0.32, w / 2, h / 2, h * 0.72);
+  const g = ctx.createRadialGradient(w / 2, h / 2, h * 0.44, w / 2, h / 2, h * 0.8);
   g.addColorStop(0, "rgba(0,0,0,0)");
-  g.addColorStop(1, "rgba(0,0,0,0.62)");
+  g.addColorStop(1, "rgba(0,0,0,0.4)");
   ctx.fillStyle = g;
   ctx.fillRect(0, 0, w, h);
   refresh(scene, Tex.vignette);
@@ -300,8 +300,8 @@ function buildSpire(scene: Phaser.Scene): void {
     );
   }
 
-  // cold rim highlight on the silhouette edges (reads against the dark sky)
-  g.lineStyle(3, Palette.accentSoft, 0.5);
+  // bright cold rim highlight on the silhouette edges so the gap reads clearly
+  g.lineStyle(5, Palette.accent, 0.9);
   g.beginPath();
   g.moveTo(W * 0.5, 0);
   g.lineTo(W * 0.5 - W * 0.34, tip);
@@ -341,7 +341,7 @@ function buildFang(scene: Phaser.Scene): void {
     pts.push({ x: W * 0.5 + half, y });
   }
   g.fillPoints(pts, true);
-  g.lineStyle(3, Palette.accentSoft, 0.45);
+  g.lineStyle(5, Palette.accent, 0.85);
   g.beginPath();
   g.moveTo(W * 0.5, 0);
   g.lineTo(W * 0.5 - W * 0.42, H);

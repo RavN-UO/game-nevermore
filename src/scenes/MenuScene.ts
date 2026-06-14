@@ -80,8 +80,8 @@ export class MenuScene extends Phaser.Scene {
     }).setDepth(4);
 
     // secondary nav — shop is reached via the Plumes counter, so only RANKS here
-    button(this, W / 2, H * 0.735, "RANKS", () => this.scene.start("Leaderboard"), { w: 240, h: 70, size: 26 }).setDepth(4);
-    iconButton(this, W - 56, H - 56, "⚙", () => this.openSettings()).setDepth(4);
+    button(this, W / 2, H * 0.735, "RANKS", () => this.scene.start("Leaderboard"), { w: 240, h: 76, size: 26 }).setDepth(4);
+    iconButton(this, W - 72, H - 96, "⚙", () => this.openSettings(), 78).setDepth(4);
 
     this.buildDailyCard();
 

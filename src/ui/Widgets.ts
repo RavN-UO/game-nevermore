@@ -116,6 +116,7 @@ export function button(
     c.setScale(1);
     onClick();
   });
+  c.on("pointerupoutside", () => c.setScale(1));
   return c;
 }
 
@@ -147,6 +148,7 @@ export function iconButton(
     onClick();
   });
   c.on("pointerout", () => c.setScale(1));
+  c.on("pointerupoutside", () => c.setScale(1));
   return c;
 }
 

@@ -99,9 +99,33 @@ export class GameScene extends Phaser.Scene {
     super("Game");
   }
 
+  /**
+   * Runs before every create() — including on scene.restart() after death.
+   * Phaser destroys all GameObjects on shutdown but KEEPS this scene instance,
+   * so every field that references a GameObject (or pooled GameObjects) must be
+   * reset here, otherwise we'd reuse destroyed objects → freeze. (This was the
+   * post-death restart freeze.)
+   */
+  init(): void {
+    this.obstacles = [];
+    this.souls = [];
+    this.ringPool = [];
+    this.ringIndex = 0;
+    this.diving = false;
+    this.pointerCount = 0;
+    this.running = false;
+    this.dead = false;
+    this.invuln = 0;
+    this.slowFactor = 1;
+    this.slowTimer = 0;
+    this.nearMissCd = 0;
+    this.intensityTier = -1;
+  }
+
   create(): void {
     this.svc = getServices(this);
     this.effects = this.svc.effects();
+    this.input.enabled = true;
     const W = DESIGN.width;
     const H = DESIGN.height;
 
@@ -254,9 +278,7 @@ export class GameScene extends Phaser.Scene {
     this.crowBody.setAlpha(1);
     this.trail.emitting = true;
 
-    // recycle any leftover entities
-    this.obstacles.forEach((o) => this.obstaclePool.release(o));
-    this.souls.forEach((s) => this.soulPool.release(s));
+    // entities were reset in init(); pools were rebuilt in create()
     this.obstacles.length = 0;
     this.souls.length = 0;
 
@@ -605,6 +627,7 @@ export class GameScene extends Phaser.Scene {
     this.dead = true;
     this.running = true; // keep update alive for fx, but `dead` gates gameplay
     this.diving = false;
+    this.input.enabled = false; // stop dive taps leaking under the death overlay
     this.trail.emitting = false;
 
     // juice: hit-stop, shake, flash, burst

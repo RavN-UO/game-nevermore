@@ -95,15 +95,40 @@ export class AudioManager {
   async unlock(): Promise<void> {
     if (this.ready || this.starting) return;
     this.starting = true;
+    // iOS 16.4+: play through the "playback" session so the SILENT/MUTE switch
+    // doesn't kill game audio (the #1 cause of "no sound" on iPhone web).
+    try {
+      const ns = navigator as unknown as { audioSession?: { type: string } };
+      if (ns.audioSession) ns.audioSession.type = "playback";
+    } catch {
+      /* not supported — falls back to default behaviour */
+    }
     try {
       await Tone.start();
+      await this.resume();
       this.build();
       this.ready = true;
+      // iOS suspends the AudioContext when backgrounded or sometimes mid-session.
+      // Re-resume on any tap and when the tab returns to the foreground.
+      window.addEventListener("pointerdown", () => void this.resume(), { passive: true });
+      document.addEventListener("visibilitychange", () => {
+        if (!document.hidden) void this.resume();
+      });
     } catch (e) {
       this.ready = false;
       this.lastError = e instanceof Error ? e.message : String(e);
     } finally {
       this.starting = false;
+    }
+  }
+
+  /** Resume the underlying AudioContext if the browser has suspended it. */
+  async resume(): Promise<void> {
+    try {
+      const ctx = Tone.getContext();
+      if (ctx.state !== "running") await ctx.resume();
+    } catch {
+      /* ignore */
     }
   }
 

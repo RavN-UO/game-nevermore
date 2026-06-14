@@ -7,37 +7,37 @@
  */
 
 export const Palette = {
-  // Backdrop — deep gothic night, top → bottom of the abyss
-  skyTop: 0x10122a,
-  skyMid: 0x0a0a1a,
-  skyBottom: 0x05050c,
+  // Backdrop — gothic night, but bright enough to stay readable in daylight.
+  skyTop: 0x2a3066,
+  skyMid: 0x191d42,
+  skyBottom: 0x0e1130,
 
-  // Parallax silhouettes (far → near)
-  far: 0x141733,
-  mid: 0x191d3e,
-  near: 0x21274f,
-  ground: 0x0c0d1c,
+  // Parallax silhouettes (far → near) — clearly stepped for depth.
+  far: 0x323a72,
+  mid: 0x424c8a,
+  near: 0x5563a8,
+  ground: 0x252a4a,
 
   // Cold accents
-  accent: 0x7be0ff, // cyan glow (souls, UI highlights)
-  accentSoft: 0x4a9fd4,
-  violet: 0x9a7bff,
-  ember: 0xff7a59, // warm contrast for danger / death
+  accent: 0x8fe8ff, // cyan glow (souls, UI highlights)
+  accentSoft: 0x6fc8ee,
+  violet: 0xa98cff,
+  ember: 0xff8a63, // warm contrast for danger / death
   gold: 0xffd76a, // currency / rewards
 
   // Neutrals
-  ink: 0x05050c,
-  bone: 0xe8ecff,
-  smoke: 0x8189b3,
-  dim: 0x4a5080,
+  ink: 0x0e1130,
+  bone: 0xeef1ff,
+  smoke: 0x9aa2cc,
+  dim: 0x5a6296,
 
   // Crow default
-  crow: 0x0d0e1a,
-  crowEdge: 0x2a2f5a,
+  crow: 0x161a36,
+  crowEdge: 0x3a4480,
 
   white: 0xffffff,
-  danger: 0xff4d6d,
-  good: 0x5dffa0,
+  danger: 0xff5d7a,
+  good: 0x6dffaa,
 } as const;
 
 export function css(color: number, alpha = 1): string {
